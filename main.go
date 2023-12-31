@@ -12,13 +12,13 @@ func FullAdderCNF(a, b, cin, s, cout,t,maxBits int) [][]int {
 	t3 := t + maxBits*2
 	t4 := t + maxBits*3
 	clauses := [][]int{
-		//for s
+		//for s a xor b xor s
 		//a XOR b = t
 		//t XOR cin = s
 		{-a, -b, t}, {a, b, t}, {a, -b, -t}, {-a, b, -t},
 		{-t, -cin, s}, {t, cin, s}, {t, -cin, -s}, {-t, cin, -s},
 
-		// for c_out
+		// for c_out (at least two)
 		// t2 = a AND b
 		// (-a OR t2) AND (-b OR t2) AND (a OR b OR -t2)
 		{-a,t2},{-b,t2},{a,b,-t2},
@@ -102,7 +102,7 @@ func max(a, b int) int {
 func main() {
 	// Example usage: Generate CNF for 3-bit and 4-bit addition
 	n := []byte{0,1,0} //as
-	m := []byte{1,1,0} //bs
+	m := []byte{1,1,1,0} //bs
 	clauses,c0,as,bs := GenerateAdderCNF(len(n),len(m))
 
 	// first carry is always 0
