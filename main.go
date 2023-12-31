@@ -111,7 +111,6 @@ func main() {
 	for i,v := range as {
 		if i+1 > len(n)	 {
 			clauses = append(clauses, []int{-v})
-			fmt.Println("kohe1")
 		} else {
 			if n[len(n)-1-i] == 0 {
 				clauses = append(clauses, []int{-v})
@@ -123,9 +122,6 @@ func main() {
 	for i,v := range bs {
 		if i+1 > len(m)	 {
 			clauses = append(clauses, []int{-v})
-			fmt.Println("kohe2")
-			fmt.Println(i)
-			fmt.Println(v)
 		} else {
 			if m[len(m)-1-i] == 0 {
 				clauses = append(clauses, []int{-v})
