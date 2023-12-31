@@ -12,25 +12,27 @@ func FullAdderCNF(a, b, cin, s, cout,t,maxBits int) [][]int {
 	t3 := t + maxBits*2
 	t4 := t + maxBits*3
 	clauses := [][]int{
-		//for s a xor b xor s
+		//for s = a xor b xor x
 		//a XOR b = t
 		//t XOR cin = s
-		{-a, -b, t}, {a, b, t}, {a, -b, -t}, {-a, b, -t},
-		{-t, -cin, s}, {t, cin, s}, {t, -cin, -s}, {-t, cin, -s},
+		{a, b, -t}, {-a, -b, -t}, {a, -b, t}, {-a, b, t},
+		{t, cin, -s}, {-t, -cin, -s}, {t, -cin, s}, {-t, cin, s},
 
 		// for c_out (at least two)
 		// t2 = a AND b
 		// (-a OR t2) AND (-b OR t2) AND (a OR b OR -t2)
-		{-a,t2},{-b,t2},{a,b,-t2},
+		{a,-t2},{b,-t2},{-a,-b,t2},
 		// t3 = a AND c_in
 		// (-a OR t3) AND (-c OR t3) AND (a OR c OR -t3)
-		{-a,t3},{-cin,t3},{a,cin,-t3},
+		{a,-t3},{cin,-t3},{-a,-cin,t3},
 		// t4 = b AND c_in
 		//(-b OR t4) AND (-c OR t4) AND (b OR c OR -t4)
-		{-b,t4},{-cin,t4},{b,cin,-t4},
+		{b,-t4},{cin,-t4},{-b,-cin,t4},
 		//c_out = t2 OR t3 OR t4
 		// (-t2 OR c_out) AND (-t3 OR c_out) AND (-t4 OR c_out) AND (t2 OR t3 OR t4 OR -c_out)
-		{-t2,cout},{-t3,cout},{-t4,cout},{t2,t3,t4,-cout},
+		// {-cout,t2},{-cout, -t3},{-cout, -t4},
+		{-cout,t2,t3,t4},
+		{cout, -t2}, {cout, -t3}, {cout, -t4},
 
 	}
 	return clauses
