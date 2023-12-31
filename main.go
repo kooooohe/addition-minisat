@@ -12,17 +12,11 @@ func FullAdderCNF(a, b, cin, s, cout,t,maxBits int) [][]int {
 	t3 := t + maxBits*2
 	t4 := t + maxBits*3
 	clauses := [][]int{
-		// s = a XOR b XOR cin // where s = true
-		// {-a, -b, s}, {a, b, s}, {-a, -cin, s}, {a, cin, s}, {-b, -cin, s}, {b, cin, s},
-		// s = a XOR b XOR cin // where s = false
-		// {-s, a, b}, {-s, a, cin}, {-s, b, cin},
-
 		//for s
 		//a XOR b = t
 		//t XOR cin = s
 		{-a, -b, t}, {a, b, t}, {a, -b, -t}, {-a, b, -t},
 		{-t, -cin, s}, {t, cin, s}, {t, -cin, -s}, {-t, cin, -s},
-
 
 		// for c_out
 		// t2 = a AND b
@@ -42,7 +36,6 @@ func FullAdderCNF(a, b, cin, s, cout,t,maxBits int) [][]int {
 	return clauses
 }
 
-// GenerateAdderCNF generates CNF for adding two binary numbers.
 func GenerateAdderCNF(n, m int) [][]int {
 	var clauses [][]int
 	maxBits := max(n, m) + 1
@@ -66,7 +59,6 @@ func GenerateAdderCNF(n, m int) [][]int {
 	cnt := 0
 	for i := 0; i < maxBits; i++ {
 		//ex:3bit 3bit 9~13 for a, 13~17 for b
-		// a := getVarIndex(i, n, varIndex)
 		a := varIndex+cnt
 		cnt++
 		b := varIndex+cnt
@@ -100,12 +92,6 @@ func max(a, b int) int {
 	return b
 }
 
-func getVarIndex(bit, size, varIndex int) int {
-	if bit < size {
-		return varIndex + bit*2
-	}
-	return 0 // Zero for bits beyond the size
-}
 
 func main() {
 	// Example usage: Generate CNF for 3-bit and 4-bit addition
