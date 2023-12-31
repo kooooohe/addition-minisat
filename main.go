@@ -36,7 +36,7 @@ func FullAdderCNF(a, b, cin, s, cout,t,maxBits int) [][]int {
 	return clauses
 }
 
-func GenerateAdderCNF(n, m int) [][]int {
+func GenerateAdderCNF(n, m int) ([][]int,int,[]int,[]int) {
 	var clauses [][]int
 	maxBits := max(n, m) + 1
 
@@ -57,6 +57,8 @@ func GenerateAdderCNF(n, m int) [][]int {
 
 	// Generate clauses for each full adder
 	cnt := 0
+	as := []int{}
+	bs := []int{}
 	for i := 0; i < maxBits; i++ {
 		//ex:3bit 3bit 9~13 for a, 13~17 for b
 		a := varIndex+cnt
@@ -79,9 +81,13 @@ func GenerateAdderCNF(n, m int) [][]int {
 		fmt.Println("t: ", t)
 		fmt.Println("")
 		clauses = append(clauses, FullAdderCNF(a, b, cin, s, cout,t,maxBits)...)
+
+
+		as = append(as, a)
+		bs = append(bs, b)
 	}
 
-	return clauses
+	return clauses,carryVars[0],as,bs
 }
 
 // Utility functions
@@ -95,7 +101,39 @@ func max(a, b int) int {
 
 func main() {
 	// Example usage: Generate CNF for 3-bit and 4-bit addition
-	clauses := GenerateAdderCNF(3, 3)
+	n := []byte{0,1,0} //as
+	m := []byte{1,1,0} //bs
+	clauses,c0,as,bs := GenerateAdderCNF(len(n),len(m))
+
+	// first carry is always 0
+	clauses = append(clauses, []int{-c0})
+
+	for i,v := range as {
+		if i+1 > len(n)	 {
+			clauses = append(clauses, []int{-v})
+			fmt.Println("kohe1")
+		} else {
+			if n[len(n)-1-i] == 0 {
+				clauses = append(clauses, []int{-v})
+			} else {
+				clauses = append(clauses, []int{v})
+			}
+		}
+	}
+	for i,v := range bs {
+		if i+1 > len(m)	 {
+			clauses = append(clauses, []int{-v})
+			fmt.Println("kohe2")
+			fmt.Println(i)
+			fmt.Println(v)
+		} else {
+			if m[len(m)-1-i] == 0 {
+				clauses = append(clauses, []int{-v})
+			} else {
+				clauses = append(clauses, []int{v})
+			}
+		}
+	}
 
 	// Output to a file
 	file, err := os.Create("adder_main.txt")
